@@ -90,6 +90,7 @@ describe("GalleryDialog", () => {
     await waitFor(() =>
       expect(ctx.fake.notifications.addError).toHaveBeenCalledWith("qlimg: failed to load images", {
         detail: "boom",
+        dismissable: true,
       }),
     );
   });
@@ -127,7 +128,7 @@ describe("GalleryDialog", () => {
       await waitFor(() =>
         expect(ctx.fake.notifications.addError).toHaveBeenCalledWith(
           "qlimg: failed to scan notes, delete is disabled",
-          expect.anything(),
+          expect.objectContaining({ dismissable: true }),
         ),
       );
       fireEvent.click(thumb("orphan.gif"));
@@ -236,6 +237,7 @@ describe("GalleryDialog", () => {
     expect(ctx.fake.clipboard.writeText).toHaveBeenCalledWith("![new.jpg](inkdrop://file:new)");
     expect(ctx.fake.notifications.addInfo).toHaveBeenCalledWith(
       "No active editor: image markdown copied to clipboard",
+      { dismissable: true },
     );
   });
 
@@ -244,7 +246,9 @@ describe("GalleryDialog", () => {
     fireEvent.click(thumb("new.jpg"));
     fireEvent.click(screen.getByText("Copy markdown"));
     expect(ctx.fake.clipboard.writeText).toHaveBeenCalledWith("![new.jpg](inkdrop://file:new)");
-    expect(ctx.fake.notifications.addInfo).toHaveBeenCalledWith("Image markdown copied");
+    expect(ctx.fake.notifications.addInfo).toHaveBeenCalledWith("Image markdown copied", {
+      dismissable: true,
+    });
   });
 
   it("closes from the Close button", async () => {
@@ -290,6 +294,7 @@ describe("GalleryDialog", () => {
       await waitFor(() =>
         expect(ctx.fake.notifications.addWarning).toHaveBeenCalledWith(
           "qlimg: image is now used by a note, not deleted",
+          { dismissable: true },
         ),
       );
       expect(ctx.fake.localDB.files.remove).not.toHaveBeenCalled();
@@ -304,6 +309,7 @@ describe("GalleryDialog", () => {
           "qlimg: failed to delete image",
           {
             detail: "locked",
+            dismissable: true,
           },
         ),
       );

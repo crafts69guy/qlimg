@@ -97,7 +97,10 @@ export function GalleryDialog() {
       const all = await env.localDB.files.all();
       setFiles([...all].sort((a, b) => b.createdAt - a.createdAt));
     } catch (err) {
-      env.notifications.addError("qlimg: failed to load images", { detail: errorDetail(err) });
+      env.notifications.addError("qlimg: failed to load images", {
+        detail: errorDetail(err),
+        dismissable: true,
+      });
     }
     try {
       setUsage(await scanUsage(env));
@@ -105,6 +108,7 @@ export function GalleryDialog() {
       setUsage(null);
       env.notifications.addError("qlimg: failed to scan notes, delete is disabled", {
         detail: errorDetail(err),
+        dismissable: true,
       });
     }
   };
@@ -139,9 +143,11 @@ export function GalleryDialog() {
   const selected = files.find((f) => f._id === selectedId);
   const usedIn = selected && usage ? (usage.get(selected._id) ?? []) : [];
 
+  // Inkdrop keeps non-dismissable notifications on screen forever, even after its
+  // 10s auto-dismiss timer fires, so every toast must opt in to `dismissable`.
   const copy = (file: ImageFile) => {
     env.clipboard.writeText(markdownFor(file));
-    env.notifications.addInfo("Image markdown copied");
+    env.notifications.addInfo("Image markdown copied", { dismissable: true });
   };
 
   const insert = (file: ImageFile) => {
@@ -149,7 +155,9 @@ export function GalleryDialog() {
     modal.close();
     if (!view) {
       env.clipboard.writeText(markdownFor(file));
-      env.notifications.addInfo("No active editor: image markdown copied to clipboard");
+      env.notifications.addInfo("No active editor: image markdown copied to clipboard", {
+        dismissable: true,
+      });
       return;
     }
     const md = markdownFor(file);
@@ -177,14 +185,19 @@ export function GalleryDialog() {
       const fresh = await scanUsage(env);
       setUsage(fresh);
       if (fresh.has(file._id)) {
-        env.notifications.addWarning("qlimg: image is now used by a note, not deleted");
+        env.notifications.addWarning("qlimg: image is now used by a note, not deleted", {
+          dismissable: true,
+        });
         return;
       }
       await env.localDB.files.remove(file._id);
       setFiles((fs) => fs.filter((f) => f._id !== file._id));
       setSelectedId(null);
     } catch (err) {
-      env.notifications.addError("qlimg: failed to delete image", { detail: errorDetail(err) });
+      env.notifications.addError("qlimg: failed to delete image", {
+        detail: errorDetail(err),
+        dismissable: true,
+      });
     }
   };
 
