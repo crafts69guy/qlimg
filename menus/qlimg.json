@@ -1,0 +1,13 @@
+{
+  "menu": [
+    {
+      "label": "Plugins",
+      "submenu": [
+        {
+          "label": "Image Gallery",
+          "command": "qlimg:toggle"
+        }
+      ]
+    }
+  ]
+}

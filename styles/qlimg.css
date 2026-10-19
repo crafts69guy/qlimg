@@ -1,0 +1,269 @@
+/* `.qlimg-dialog` lands on Inkdrop's modal wrapper, so never size it here. */
+.qlimg-dialog {
+  /* Every color derives from the active Inkdrop theme's variables. */
+  --qlimg-radius: 10px;
+  --qlimg-accent: var(--primary-color, #2185d0);
+  --qlimg-border: var(--border-color, rgba(127, 127, 127, 0.2));
+  --qlimg-muted: var(--qlimg-muted);
+  --qlimg-surface: var(--secondary-segment-background, rgba(127, 127, 127, 0.08));
+  --qlimg-hover: var(--button-hover-background-color, rgba(127, 127, 127, 0.15));
+  --qlimg-tint: color-mix(in srgb, var(--text-color, #888) 10%, transparent);
+  --qlimg-chip: color-mix(in srgb, var(--text-color, #888) 12%, transparent);
+  --qlimg-overlay: var(--modal-box-content-background, #000);
+}
+
+/* Toolbar */
+.qlimg-dialog .qlimg-toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.qlimg-dialog .qlimg-search {
+  position: relative;
+  flex: 1;
+}
+.qlimg-dialog .qlimg-search svg {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  width: 15px;
+  height: 15px;
+  translate: 0 -50%;
+  /* light-dark() theme colors aren't valid in stroke; route through color. */
+  color: var(--qlimg-muted);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  pointer-events: none;
+  z-index: 1;
+}
+.qlimg-dialog .qlimg-search input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px 0 36px;
+  border: 1px solid var(--qlimg-border);
+  border-radius: 8px;
+  background: var(--input-background, transparent);
+  color: var(--input-color, inherit);
+  font-size: 13px;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.qlimg-dialog .qlimg-search input::placeholder {
+  color: var(--input-placeholder-color, var(--muted-text-color));
+}
+.qlimg-dialog .qlimg-search input:focus {
+  border-color: var(--qlimg-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qlimg-accent) 25%, transparent);
+}
+/* Layout */
+.qlimg-dialog .qlimg-body {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 16px;
+  height: 62vh;
+}
+
+/* Grid */
+.qlimg-dialog .qlimg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  /* Keep cells square instead of squeezing rows into the scroll box. */
+  grid-auto-rows: max-content;
+  gap: 12px;
+  align-content: start;
+  padding: 4px;
+  overflow-y: auto;
+}
+.qlimg-dialog .qlimg-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--qlimg-border);
+  border-radius: var(--qlimg-radius);
+  background: var(--qlimg-surface);
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    outline-color 0.15s;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.qlimg-dialog .qlimg-thumb:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transform: translateY(-2px);
+}
+.qlimg-dialog .qlimg-thumb.selected,
+.qlimg-dialog .qlimg-thumb:focus-visible {
+  outline-color: var(--qlimg-accent);
+}
+.qlimg-dialog .qlimg-thumb img {
+  /* Out of flow so the image never stretches the square cell. */
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    opacity 0.3s,
+    transform 0.3s ease;
+}
+.qlimg-dialog .qlimg-thumb:hover img {
+  transform: scale(1.05);
+}
+.qlimg-dialog img:not([src]) {
+  opacity: 0;
+}
+.qlimg-dialog .qlimg-thumb:has(img:not([src])) {
+  background: linear-gradient(100deg, transparent 30%, var(--qlimg-tint) 50%, transparent 70%)
+    var(--qlimg-surface);
+  background-size: 200% 100%;
+  animation: qlimg-shimmer 1.4s linear infinite;
+}
+@keyframes qlimg-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+.qlimg-dialog .qlimg-caption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 20px 8px 6px;
+  overflow: hidden;
+  background: linear-gradient(
+    transparent,
+    color-mix(in srgb, var(--qlimg-overlay) 92%, transparent) 70%
+  );
+  color: var(--text-color, #fff);
+  font-size: 11px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.qlimg-dialog .qlimg-thumb:hover .qlimg-caption,
+.qlimg-dialog .qlimg-thumb.selected .qlimg-caption {
+  opacity: 1;
+}
+.qlimg-dialog .qlimg-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--qlimg-overlay) 80%, transparent);
+  box-shadow: inset 0 0 0 1px var(--qlimg-border);
+  color: var(--text-color, #fff);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(6px);
+}
+.qlimg-dialog .qlimg-empty {
+  grid-column: 1 / -1;
+  padding: 64px 0;
+  color: var(--qlimg-muted);
+  text-align: center;
+}
+
+/* Detail */
+.qlimg-dialog .qlimg-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  overflow-y: auto;
+  border: 1px solid var(--qlimg-border);
+  border-radius: 12px;
+  background: var(--qlimg-surface);
+  color: var(--text-color, inherit);
+}
+.qlimg-dialog .qlimg-placeholder {
+  align-items: center;
+  justify-content: center;
+  color: var(--qlimg-muted);
+}
+.qlimg-dialog .qlimg-preview {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 8px;
+  background: repeating-conic-gradient(var(--qlimg-tint) 0 25%, transparent 0 50%) 0 0 / 16px 16px;
+}
+.qlimg-dialog .qlimg-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s;
+}
+.qlimg-dialog .qlimg-name {
+  font-size: 14px;
+  font-weight: 600;
+  word-break: break-word;
+}
+.qlimg-dialog .qlimg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.qlimg-dialog .qlimg-chip {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--qlimg-chip);
+  color: var(--qlimg-muted);
+  font-size: 11px;
+}
+.qlimg-dialog .qlimg-section-title {
+  color: var(--qlimg-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.qlimg-dialog .qlimg-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: -6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.qlimg-dialog .qlimg-notes a {
+  display: block;
+  padding: 6px 8px;
+  overflow: hidden;
+  border-radius: 6px;
+  color: var(--text-color, inherit);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.qlimg-dialog .qlimg-notes a:hover {
+  background: var(--qlimg-hover);
+  color: var(--qlimg-accent);
+}
+.qlimg-dialog .qlimg-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+}
+.qlimg-dialog .qlimg-actions .ui.button {
+  width: 100%;
+  margin: 0;
+}

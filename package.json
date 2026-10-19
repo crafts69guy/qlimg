@@ -1,0 +1,41 @@
+{
+  "name": "qlimg",
+  "version": "0.1.0",
+  "description": "Browse, insert, and clean up images stored in Inkdrop",
+  "keywords": [
+    "attachments",
+    "gallery",
+    "image"
+  ],
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "oxlint",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "test": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/view": "^6.0.0",
+    "@inkdropapp/types": "^0.1.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.0.5",
+    "happy-dom": "^21.0.3",
+    "oxfmt": "^0.73.0",
+    "oxlint": "^1.88.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^6.0.2",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "inkdrop": "^6.0.0"
+  },
+  "styleSheets": [
+    "qlimg.css"
+  ]
+}
