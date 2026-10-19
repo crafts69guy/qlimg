@@ -1,51 +1,86 @@
 # qlimg
 
-An Inkdrop v6 plugin that opens an image gallery modal for every image stored in your Inkdrop database. From the gallery you can:
+**An image gallery for [Inkdrop](https://www.inkdrop.app/).** Browse every image in your notes, drop one into the note you're editing, and safely clean up the ones nothing uses anymore.
 
-- search images and preview them
-- insert an image into the current note, or copy its markdown
-- see which notes use an image
-- delete images that no note uses
+- **Browse** all images in one grid, newest first, with thumbnails that load lazily as you scroll
+- **Search** by file name, or filter to **unused** images only
+- **Insert** into the current note with a double-click or <kbd>Enter</kbd>
+- **Trace usage**: see which notes reference an image and jump to them
+- **Clean up**: delete orphaned images, guarded by a fresh usage check
+
+> Requires Inkdrop **v6** or later.
 
 ## Install
 
-```sh
+qlimg isn't on the plugin registry yet, so install it from source:
+
+```fish
+git clone <repo-url> qlimg
+cd qlimg
 npm install
 npm run build
-ln -s (pwd) ~/Library/Application\ Support/inkdrop/packages/qlimg   # fish
-# or: ipm link
+ipm link
 ```
 
-Reload Inkdrop afterwards (`window:reload`).
+Then reload Inkdrop (**Developer → Reload**, or run `window:reload`).
+
+<details>
+<summary>Without <code>ipm</code></summary>
+
+Symlink the folder into Inkdrop's packages directory (macOS path shown):
+
+```fish
+ln -s (pwd) ~/Library/Application\ Support/inkdrop/packages/qlimg
+```
+
+</details>
 
 ## Usage
 
-Press `ctrl-alt-i`, or choose **Plugins → Image Gallery**. Either one runs the `qlimg:toggle` command.
+Open the gallery with <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd> or **Plugins → Image Gallery**.
 
-- **Search:** case-insensitive match on the file name. **Unused only** hides images that any note references.
-- **Click** an image to select it. **Double-click** it or press **Enter** to insert `![name](inkdrop://file:…)` at the cursor. If no editor is active (for example in preview mode), the markdown goes to the clipboard instead.
-- **Used in N notes:** click a note to open it.
-- **Copy markdown:** copies the image markdown to the clipboard.
+| Action | How |
+| --- | --- |
+| Preview an image | Click it |
+| Insert at the cursor | Double-click, <kbd>Enter</kbd>, or **Insert** |
+| Copy as Markdown | **Copy markdown** |
+| Open a note that uses it | Click the note under **Used in N notes** |
+| Delete it | **Delete** (only for unused images) |
 
-## Keymap
+Images are inserted as `![name](inkdrop://file:…)`. If no editor is active, for example in preview mode, the Markdown is copied to the clipboard instead.
 
-The default binding is `ctrl-alt-i` on `body`. You can override it in `keymap.json`:
+### Custom shortcut
+
+The gallery is bound to the `qlimg:toggle` command. To rebind it, add this to your `keymap.json`:
 
 ```json
-{ "body": { "cmd-shift-i": "qlimg:toggle" } }
+{
+  "body": {
+    "cmd-shift-i": "qlimg:toggle"
+  }
+}
 ```
 
-## Deleting images
+## Deleting images safely
 
-The **Delete** button is only enabled for images that no note references. Before it deletes anything, the gallery asks for confirmation and scans every note again, so a usage added while the gallery was open still blocks the delete.
+**Delete** only works on images that no note references. Before deleting, qlimg asks you to confirm and then rescans every note, so an image that became used while the gallery was open is kept.
 
-**Caveat:** the scan only covers the **local** database, meaning current notes, trashed notes, and the note you are editing. It cannot see notes from other devices that haven't synced yet, or old note revisions. If an image is referenced only there, it will look unused, and deleting it breaks those references. Deletion cannot be undone.
+> [!WARNING]
+> The usage scan only covers your **local** database: current notes, trashed notes, and the note you're editing. It can't see notes from other devices that haven't synced yet, or older note revisions. An image referenced only there will look unused, and deleting it breaks those references. **Deletion can't be undone.**
+
+If qlimg can't scan your notes, it shows an error and disables deletion entirely rather than guessing.
 
 ## Development
 
-```sh
-npm run build      # tsc -> lib/
-npm test           # vitest + v8 coverage (98% threshold)
+```fish
+npm run build      # compile TypeScript to lib/
+npm test           # vitest with v8 coverage (98% threshold)
 npm run lint       # oxlint
 npm run fmt:check  # oxfmt
 ```
+
+Source lives in `src/`. The gallery UI is `src/gallery-dialog.tsx`, and the usage scan is `src/usage.ts`.
+
+## License
+
+MIT
