@@ -15,7 +15,7 @@
 qlimg isn't on the plugin registry yet, so install it from source:
 
 ```fish
-git clone <repo-url> qlimg
+git clone https://github.com/crafts69guy/qlimg.git
 cd qlimg
 npm install
 npm run build

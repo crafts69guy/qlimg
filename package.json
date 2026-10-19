@@ -9,6 +9,7 @@
     "image"
   ],
   "license": "MIT",
+  "repository": "https://github.com/crafts69guy/qlimg",
   "main": "./lib/index.js",
   "scripts": {
     "build": "tsc",
