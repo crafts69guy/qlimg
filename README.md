@@ -39,13 +39,13 @@ ln -s (pwd) ~/Library/Application\ Support/inkdrop/packages/qlimg
 
 Open the gallery with <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd> or **Plugins → Image Gallery**.
 
-| Action | How |
-| --- | --- |
-| Preview an image | Click it |
-| Insert at the cursor | Double-click, <kbd>Enter</kbd>, or **Insert** |
-| Copy as Markdown | **Copy markdown** |
-| Open a note that uses it | Click the note under **Used in N notes** |
-| Delete it | **Delete** (only for unused images) |
+| Action                   | How                                           |
+| ------------------------ | --------------------------------------------- |
+| Preview an image         | Click it                                      |
+| Insert at the cursor     | Double-click, <kbd>Enter</kbd>, or **Insert** |
+| Copy as Markdown         | **Copy markdown**                             |
+| Open a note that uses it | Click the note under **Used in N notes**      |
+| Delete it                | **Delete** (only for unused images)           |
 
 Images are inserted as `![name](inkdrop://file:…)`. If no editor is active, for example in preview mode, the Markdown is copied to the clipboard instead.
 
