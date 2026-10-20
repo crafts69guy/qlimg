@@ -2,6 +2,8 @@
 
 **An image gallery for [Inkdrop](https://www.inkdrop.app/).** Browse every image in your notes, drop one into the note you're editing, and safely clean up the ones nothing uses anymore.
 
+![The qlimg image gallery in Inkdrop (thumbnails blurred)](https://raw.githubusercontent.com/crafts69guy/qlimg/production/docs/showcase.png)
+
 - **Browse** all images in one grid, newest first, with thumbnails that load lazily as you scroll
 - **Search** by file name, or filter to **unused** images only
 - **Insert** into the current note with a double-click or <kbd>Enter</kbd>
@@ -12,7 +14,12 @@
 
 ## Install
 
-qlimg isn't on the plugin registry yet, so install it from source:
+```fish
+ipm install qlimg
+```
+
+<details>
+<summary>From source</summary>
 
 ```fish
 git clone https://github.com/crafts69guy/qlimg.git
@@ -23,15 +30,6 @@ ipm link
 ```
 
 Then reload Inkdrop (**Developer → Reload**, or run `window:reload`).
-
-<details>
-<summary>Without <code>ipm</code></summary>
-
-Symlink the folder into Inkdrop's packages directory (macOS path shown):
-
-```fish
-ln -s (pwd) ~/Library/Application\ Support/inkdrop/packages/qlimg
-```
 
 </details>
 
