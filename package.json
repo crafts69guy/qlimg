@@ -1,6 +1,6 @@
 {
   "name": "qlimg",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Image gallery for Inkdrop: browse, insert, and safely clean up unused images",
   "keywords": [
     "attachments",
